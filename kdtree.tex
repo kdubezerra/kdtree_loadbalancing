@@ -102,10 +102,9 @@ Different authors have tried to address the problem of partitioning the virtual 
 
 \cite{ahmed2008mol}, for example, propose a cell-oriented load balancing model. To balance the load, their algorithm finds, first, all clusters of cells that are managed by the overloaded server. The smallest cluster is selected and, from this cluster, it is chosen the cell which has the least interaction with other cells of the same server -- the interaction between two cells A and B is defined by the authors as the number of pairs of avatars interacting with each other, one of them in A and the other one in B. The selected cell is then transferred to the least loaded server, considering ``load'' as the bandwidth used to send state updates to the players whose avatars are positioned in the cells managed by that server. This process is repeated until the server is no longer overloaded or there is no more servers capable of absorbing more load -- in this case, one option could be to reduce the frequency at which state update messages are sent to the players, as suggested by \cite{bezerra2008a3}.
 
-%to do: por na horizontal
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.5\linewidth]{images/grafo}
+	\includegraphics[width=0.9\linewidth]{images/grafo}
 	\caption{Graph representation of the virtual environment}
 	\label{fig:graph}
 \end{figure}
@@ -160,10 +159,9 @@ To make an initial space division, it is constructed a balanced kd-tree. For thi
 \end{algorithmic}
 \end{algorithm}
 
-%to do: por na horizontal
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.75\linewidth]{images/kdtree}
+	\includegraphics[width=\linewidth]{images/kdtree}
 	\caption{Balanced kd-trees built with the described algorithm}
 	\label{fig:kdtree}
 \end{figure}
@@ -272,14 +270,14 @@ Figures \ref{fig:distribution:uniform} and \ref{fig:distribution:hotspots} prese
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/usagedeviation_uniform}
+	\includegraphics[width=0.8\linewidth]{images/usagedeviation_uniform}
 	\caption{Average deviation of the ideal balance of the servers (without hotspots)}
 	\label{fig:usagedeviation:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/usagedeviation_hotspots}
+	\includegraphics[width=0.8\linewidth]{images/usagedeviation_hotspots}
 	\caption{Average deviation of the ideal balance of the servers (with hotspots)}
 	\label{fig:usagedeviation:hotspots}
 \end{figure}
@@ -288,14 +286,14 @@ In figures \ref{fig:usagedeviation:uniform} and \ref{fig:usagedeviation:hotspots
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/migrations_uniform}
+	\includegraphics[width=0.8\linewidth]{images/migrations_uniform}
 	\caption{Player migrations between servers (without hotspots)}
 	\label{fig:migrations:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/migrations_hotspots}
+	\includegraphics[width=0.8\linewidth]{images/migrations_hotspots}
 	\caption{Player migrations between servers (with hotspots)}
 	\label{fig:migrations:hotspots}
 \end{figure}
@@ -304,14 +302,14 @@ Regarding player migrations between servers, all the algorithms -- except BFBCT 
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/overhead_uniform}
+	\includegraphics[width=0.8\linewidth]{images/overhead_uniform}
 	\caption{Inter-server communication for each algorithm over time (without hotspots)}
 	\label{fig:overhead:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\linewidth]{images/overhead_hotspots}
+	\includegraphics[width=0.8\linewidth]{images/overhead_hotspots}
 	\caption{Inter-server communication for each algorithm over time (with hotspots)}
 	\label{fig:overhead:hotspots}
 \end{figure}
@@ -341,17 +339,11 @@ November 1993;
 accepted January 1996
 \end{received}
 
-
-%\elecappendix
+%{\let\setcounter\mycounter
+%	\elecappendix
+%}
 
 \medskip
-
-The contents of the electronic appendix is written after the
-references and the ``received'' environment.  The electronic appendix
-is started by an \verb|\elecappendix| command:
-\begin{quote}
-  {\tt \verb|\|elecappendix}
-\end{quote}
 
 \end{document}
 
