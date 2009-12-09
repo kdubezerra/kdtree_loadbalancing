@@ -85,17 +85,15 @@ dynamically adjust the resulting subdivision based on the distribution of avatar
 
 \section{Introduction}
 
-The main characteristic of MMOGs is the large number of players interacting simultaneously, reaching the number of tens of thousands \cite{schiele2007rpp}. When using a client-server architecture for the players to communicate with one another, the server intermediates the communication between each pair of players.
+The main characteristic of Massively Multiplayer Online Games (MMOGs) is the large number of players interacting simultaneously, which currently can reach up to tens of thousands \cite{schiele2007rpp}. Client-server architectures are often configured to allow communication among players, with the server intermediating the communication between each pair of players. To allow player interaction, each player sends commands to the server, which calculates the new game state and propagates back to all players impacted by the state change. This mechanism can lead to many state update messages sent by the server, which may be quadratic on the number of players when all players interact among themselves. Therefore, the cost of maintaining a centralized infrastructure like this is high when many players are used, thus restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
 
-To allow the interaction of players, each one of them sends his commands to the server, which calculates the resulting game state and sends it to all the players to whom the state change is relevant. We can see that the number of state update messages sent by the server may grow proportionally to the square of the number of players, if all players are interacting with one another. Obviously, depending on the number of players, the cost of maintaining a centralized infrastructure like this is too high, restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
+In order to reduce this cost, several decentralized solutions have been proposed. Possible solutions include peer-to-peer networks \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps} or distributed servers
+\cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam},
+which are composed of low-cost nodes connected through the Internet. Common to both approaches is the fact that the ``world'', or virtual environment of the game is divided into regions which are managed by a server (or a group of peers). Each of these regions must not violate its capacity, and thus must not have more content than the load imposed on the corresponding server.
 
-In order to reduce this cost, several decentralized solutions have been proposed. Some of them use peer-to-peer networks, such as \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Others propose the use of a distributed server composed of low-cost nodes connected through the Internet, as in \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. Anyway, in all these approaches, the ``world'', or virtual environment of the game is divided into regions and for every region is assigned a server -- or a group of peers to manage it, when using peer-to-peer networks. Each of these regions must have a content such that the load imposed on the corresponding server is not greater than its capacity.
+Players are assigned to servers based on their location. When an \emph{avatar} (representation of the player in the virtual environment) is located in a region, the player controlling that avatar connects to the server associated to that region. This server becomes responsible for processing the input from that player and for sending update messages in response. If a server becomes overloaded due to an excessive number of avatars in its region, a new partitioning of the virtual environment must be calculated to alleviate the overloaded server.
 
-When an \emph{avatar} (representation of the player in the virtual environment) is located in a region, the player controlling that avatar connects to the server associated to that region. That server, then, is responsible for receiving the input from that player and for sending, in response, the update messages. When a server becomes overloaded due to an excessive number of avatars in its region and, therefore, more players to be updated, the division of the virtual environment must be recalculated in order to alleviate the overloaded server.
-
-Usually, the virtual environment is divided into relatively small cells, which are then grouped into regions and distributed among the servers. However, this approach has a severe limitation in its granularity, since the cells have fixed size and position. Using a more appropriate geometric algorithm, it should be possible to achieve a better player distribution among different servers, making use of traditional techniques that are generally used for computer graphics.
-
-In this work, we propose the utilization of a kd-tree to perform the partitioning of the virtual environment. When a server is overloaded, it triggers the load balancing, readjusting the limits of its region by changing the split coordinates stored in the kd-tree. A prototype has been developed and used in simulations. The results found in these simulations have been compared to previous results from approaches which use the cell division technique.
+Usually, the virtual environment is divided into relatively smaller cells, which are grouped into regions and distributed among the servers. However, this approach has a severe limitation in its granularity, since the cells have fixed size and position. Using more elaborate partitioning algorithms allows better player distribution among different servers, which rely on traditional data structures generally used in geometric algorithms \cite{samet2005}. In this work, we use a kd-tree to dynamically perform the spatial partitioning of the virtual environment. When a server is overloaded, it triggers the load balancing algorithm, which changes the limits of each region by changing the split coordinates stored in the kd-tree. We validate our proposal with several simulations and compared the results to previous work that uses the cell division technique.
 
 The text is organized as follows: in section \ref{context}, some related works are described; in section \ref{sec:proposal}, the algorithm proposed here is presented in detail; in the sections \ref{sec:simul} and \ref{sec:result}, we present, respectively, the simulation details and its results and, in section \ref{sec:conc}, the conclusions of this work are presented.
 
@@ -107,7 +105,7 @@ Different authors have tried to address the problem of partitioning the virtual 
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.6\linewidth]{images/macromicro}
+	\includegraphics[width=0.4\linewidth]{images/macromicro}
 	\caption{Division into cells and grouping into regions}
 	\label{fig:cells}
 \end{figure}
@@ -116,7 +114,7 @@ Different authors have tried to address the problem of partitioning the virtual 
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.9\linewidth]{images/grafo}
+	\includegraphics[width=0.7\linewidth]{images/grafo}
 	\caption{Graph representation of the virtual environment}
 	\label{fig:graph}
 \end{figure}
@@ -129,7 +127,7 @@ This kind of data structure is generally used in computer graphics. However, as 
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.5\linewidth]{images/bsp}
+	\includegraphics[width=0.3\linewidth]{images/bsp}
 	\caption{Space partitioning using a BSP tree}
 	\label{fig:bsp}
 \end{figure}
