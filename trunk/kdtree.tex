@@ -20,6 +20,7 @@
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{url}
+\usepackage{subfigure}
 
 
 \newcommand{\BibTeX}{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -84,7 +85,10 @@ dynamically adjust the resulting subdivision based on the distribution of avatar
 
 \section{Introduction}
 
-The main characteristic of Massively Multiplayer Online Games (MMOGs) is the large number of players interacting simultaneously, which currently can reach up to tens of thousands \cite{schiele2007rpp}. Client-server architectures are often configured to allow communication among players, with the server intermediating the communication between each pair of players. To allow player interaction, each player sends commands to the server, which calculates the new game state and propagates back to all players impacted by the state change. This mechanism can lead to many state update messages sent by the server, which may be quadratic on the number of players when all players interact among themselves. Therefore, the cost of maintaining a centralized infrastructure like this is high when many players are used, thus restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
+Massively Multiplayer Online Games (MMOGs) is a genre of computer games that demands a lot of network
+bandwidth. The main characteristic of MMOGs is the large number of players interacting simultaneously, which currently can reach up to tens of thousands \cite{schiele2007rpp}. 
+Client-server architectures are often configured to allow communication among players, with the server intermediating the communication between each pair of players. 
+To allow player interaction, each player sends commands to the server, which calculates the new game state and propagates back to all players affected by the state change. This mechanism can lead to many state update messages sent by the server, which may be quadratic on the number of players when all players interact among themselves. Therefore, the cost of maintaining a centralized infrastructure like this is high when lots of players are used, thus restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
 
 In order to reduce this cost, several decentralized solutions have been proposed. Possible solutions include peer-to-peer networks \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps} or distributed servers
 \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam},
@@ -120,22 +124,22 @@ In the work of \cite{ahmed2008mol} a cell-oriented load balancing model is propo
 
 In \cite{bezerra2009lbs}, it is also proposed the division into cells. To perform the division, the environment is represented by a graph, where each vertex represents a cell (Figure \ref{fig:graph}). Every edge in the graph connects two vertices representing neighboring cells. The weight of a vertex is the server's bandwidth occupied to send state updates to the players whose avatars are in the cell represented by that vertex. The interaction between any two cells define the weight of the edge connecting the corresponding vertices. To form the regions, the graph is partitioned using a greedy algorithm: starting from the heaviest vertex, at each step it is added the vertex connected by the heaviest edge to any of the vertices already selected, until the total weight of the partition of the graph -- defined as the sum of the vertices' weights -- reaches a certain threshold related to the total capacity of the server that will receive the region represented by that partition of the graph.
 
-Although this approach works, there is a serious limitation on the distribution granularity it can achieve. If a finer granularity is desired, it is necessary to use very small cells, increasing the number of vertices in the graph that represents the virtual environment and, consequently, the time required to perform the balancing. Besides, the control message containing the list of cells designated to each server also becomes longer. Thus, it may be better to use another approach to perform the partitioning of the virtual environment, possibly using a more suitable data structure, such as the kd-tree \cite{bentley1975mbs}.
+Although this approach works, there is a serious limitation on the distribution granularity it can achieve. If a finer granularity is desired, it is necessary to use very small cells, increasing the number of vertices in the graph that represents the virtual environment and, consequently, the time required to perform the balancing. Besides, the control message containing the list of cells designated to each server also becomes longer. Thus, it may be better to use another approach to perform the partitioning of the virtual environment, possibly using a more suitable data structure, such as the kd-tree \cite{bentley1975mbs}(Figure \ref{fig:bsp}(a)).
 
-This kind of data structure is generally used in computer graphics. However, as in MMOGs there is geometric information -- such as the position of the avatars in the environment --, space partitioning trees can be used. Moreover, we cand find in the literature techniques for keeping the partitions defined by the tree with a similar ``load''. In \cite{luque2005bpc}, for example, it is sought to reduce the time needed to calculate the collisions between pairs of objects moving through space. The authors propose the use of a BSP (binary space partitioning) tree to distribute the objects in the scene (Figure \ref{fig:bsp}). Obviously, if each object of a pair is completely inserted in a different partition, they do not collide and there is no need to perform a more complex test for this pair. Assuming an initial division, it is proposed by the authors a dynamic readjustment of the tree as objects move, balancing their distribution on the leaf-nodes of the tree and, therefore, minimizing the time required to perform the collision detection. Some of the ideas proposed by the authors may be used in the context of load balancing between servers in MMOGs.
+This kind of data structure is generally used in computer graphics. However, as in MMOGs there is geometric information -- such as the position of the avatars in the environment --, space partitioning trees can be used. Moreover, we cand find in the literature techniques for keeping the partitions defined by the tree with a similar ``load''. In \cite{luque2005bpc}, for example, it is sought to reduce the time needed to calculate the collisions between pairs of objects moving through space. The authors propose the use of a BSP (binary space partitioning) tree to distribute the objects in the scene (Figure \ref{fig:bsp}(b)). Obviously, if each object of a pair is completely inserted in a different partition, they do not collide and there is no need to perform a more complex test for this pair. Assuming an initial division, it is proposed by the authors a dynamic readjustment of the tree as objects move, balancing their distribution on the leaf-nodes of the tree and, therefore, minimizing the time required to perform the collision detection. Some of the ideas proposed by the authors may be used in the context of load balancing between servers in MMOGs.
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.3\linewidth]{images/bsp}
-	\caption{Space partitioning using a BSP tree}
+	\subfigure[]{\includegraphics[width=0.3\linewidth]{images/kdtree2}}
+	\subfigure[]{\includegraphics[width=0.3\linewidth]{images/bsp}}
+	\caption{Space partitioning using a kd-tree (a) and a BSP tree (b).}
 	\label{fig:bsp}
 \end{figure}
 
 \section{Proposed approach}
 \label{sec:proposal}
 
-The load balancing approach proposed here is based on two criteria: first, the system should be considered heterogeneous (i.e. every server may have a different amount of resources) and, second, the load on each server is \emph{not} proportional to the number of players connected to it, but to the amount of bandwidth required to send state update messages to them.
-
+In this section we describe our load balancing algorithm. Our proposal is based on two criteria: first, the system should be considered heterogeneous (i.e. every server may have a different amount of resources) and, second, the load on each server might \emph{not} proportional to the number of players connected to it, but to the amount of bandwidth required to send state update messages to them.
 This choice is due to the fact that every player sends commands to the server at a constant rate, so the number of messages received by the server per unit time grows linearly with the number of players, whereas the number of state update messages sent by the server may be quadratic, in the worst case.
 
 As mentioned in the introduction, to divide the environment of the game into regions, we propose the utilization of a data structure known as kd-tree. The vast majority of MMOGs, such as World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} and \mbox{Lineage II} \cite{lineage2}, despite having three-dimensional graphics, the simulated world -- cities, forests, swamps and points of interest in general -- in these games is mapped in two dimensions. Therefore, we propose to use a kd-tree with \mbox{k = 2}.
