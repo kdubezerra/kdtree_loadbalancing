@@ -8,6 +8,9 @@ do
 	do
 		cd ${PLAYERS}players_prob${PROB}
 		gnuplot distribution_${PLAYERS}_${PROB}.gp
+		epstopdf distribution_${PLAYERS}_${PROB}.eps
+		gnuplot usagedeviation_${PLAYERS}_${PROB}.gp
+		epstopdf usagedeviation.eps
 		cd ..
 		if [ $PROB -eq 0 ]
 		then PROB=70

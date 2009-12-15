@@ -1,38 +1,38 @@
-Set 750x750 at 32 bits-per-pixel mode
-SDL_ttf inicializado com sucesso
-X[0] = 740 ; Y[0] = 270
-X[1] = 310 ; Y[1] = 20
-X[2] = 440 ; Y[2] = 400
-Server 0 has power of 20000
-Server 1 has power of 40000
-Server 2 has power of 60000
-Server 3 has power of 80000
-Server 4 has power of 100000
-Server 5 has power of 120000
-Server 6 has power of 140000
-Server 7 has power of 160000
-xmin = 0; xmax = 749; ymin = 0; ymax = 749.
-xmin = 0; xmax = 383; ymin = 0; ymax = 749.
-xmin = 0; xmax = 383; ymin = 0; ymax = 378.
-xmin = 0; xmax = 383; ymin = 379; ymax = 749.
-xmin = 384; xmax = 749; ymin = 0; ymax = 749.
-xmin = 384; xmax = 749; ymin = 0; ymax = 364.
-xmin = 384; xmax = 749; ymin = 365; ymax = 749.
-Node id #0: 384
-Node id #0: 379
-Node id #0: 190
-Node id #0: -1
-Node id #4: -1
-Node id #2: 203
-Node id #2: -1
-Node id #6: -1
-Node id #1: 365
-Node id #1: 576
-Node id #1: -1
-Node id #5: -1
-Node id #3: 550
-Node id #3: -1
-Node id #7: -1
+#Set 750x750 at 32 bits-per-pixel mode
+#SDL_ttf inicializado com sucesso
+#X[0] = 740 ; Y[0] = 270
+#X[1] = 310 ; Y[1] = 20
+#X[2] = 440 ; Y[2] = 400
+#Server 0 has power of 20000
+#Server 1 has power of 40000
+#Server 2 has power of 60000
+#Server 3 has power of 80000
+#Server 4 has power of 100000
+#Server 5 has power of 120000
+#Server 6 has power of 140000
+#Server 7 has power of 160000
+#xmin = 0; xmax = 749; ymin = 0; ymax = 749.
+#xmin = 0; xmax = 383; ymin = 0; ymax = 749.
+#xmin = 0; xmax = 383; ymin = 0; ymax = 378.
+#xmin = 0; xmax = 383; ymin = 379; ymax = 749.
+#xmin = 384; xmax = 749; ymin = 0; ymax = 749.
+#xmin = 384; xmax = 749; ymin = 0; ymax = 364.
+#xmin = 384; xmax = 749; ymin = 365; ymax = 749.
+#Node id #0: 384
+#Node id #0: 379
+#Node id #0: 190
+#Node id #0: -1
+#Node id #4: -1
+#Node id #2: 203
+#Node id #2: -1
+#Node id #6: -1
+#Node id #1: 365
+#Node id #1: 576
+#Node id #1: -1
+#Node id #5: -1
+#Node id #3: 550
+#Node id #3: -1
+#Node id #7: -1
 1100 0 114 0.0335225 8 32633 65668 98898 135482 168884 204930 237584 274430 9617 23453 11598 26190 20855 10958 29670 9557 
 2200 0 127 0.0294966 8 34413 69417 105422 143106 176087 210224 248750 289906 3393 17532 8526 30006 23395 16809 31478 23868 
 3300 0 186 0.0446408 8 35498 70186 105250 143924 181367 220798 260845 296550 2144 17654 9696 32409 21826 13156 35823 22693 
@@ -1123,6 +1123,6 @@ Node id #7: -1
 1196800 0 128 0.0453798 8 38514 76891 118097 159939 196600 241018 282333 327328 8085 33695 20028 34799 26308 23303 43689 31192 
 1197900 0 168 0.0540124 8 39422 79270 116560 159458 204237 247073 291544 331749 8362 26546 24014 34624 30425 22655 43548 31001 
 1199000 0 153 0.0488868 8 38429 80460 119408 159810 202243 244449 288691 331613 6665 24530 24838 32199 28605 24249 44812 30959 
-0 162565 8 20000 40000 60000 80000 100000 120000 140000 160000 40110.6 81114.2 124431 166859 208272 253961 296484 343154 8483.8 32015.8 19050.9 49462.6 32154.3 28678.2 47733.4 34805.9  
-Peso total (servidores) no último instante = 1460316
-Peso total (avatares) no último instante = 1460316
+#0 162565 8 20000 40000 60000 80000 100000 120000 140000 160000 40110.6 81114.2 124431 166859 208272 253961 296484 343154 8483.8 32015.8 19050.9 49462.6 32154.3 28678.2 47733.4 34805.9  
+#Peso total (servidores) no último instante = 1460316
+#Peso total (avatares) no último instante = 1460316
