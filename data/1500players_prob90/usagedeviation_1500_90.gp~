@@ -1,4 +1,4 @@
-load "../usagedeviation_generic.gp"
+load "../usagedeviation_generic_1500.gp"
 
 set title '1500 players, 3 hotspots, 90% chance of chosing one as waypoint' font "Helvetica, 20" 
 set output "usagedeviation.eps"

@@ -12,6 +12,8 @@ do
 		epstopdf distribution_${PLAYERS}_${PROB}.eps
 		gnuplot usagedeviation_${PLAYERS}_${PROB}.gp
 		epstopdf usagedeviation.eps
+		gnuplot migrations.gp
+		epstopdf migrations.eps
 		cd ..
 		if [ $PROB -eq 0 ]
 		then PROB=70
@@ -23,3 +25,6 @@ do
 	done
 	PLAYERS=$((PLAYERS+750))
 done
+
+cd ..
+./compila.sh
