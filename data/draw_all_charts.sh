@@ -1,4 +1,5 @@
 #!/bin/bash
+#script para gerar todos os graficos em eps e em pdf automaticamente
 
 PLAYERS=750
 while [ $PLAYERS -le 1500 ]
