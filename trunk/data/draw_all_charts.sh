@@ -16,6 +16,8 @@ do
 		epstopdf migrations.eps
 		gnuplot overhead.gp
 		epstopdf overhead.eps
+		gnuplot avatarsdistribution.gp
+		epstopdf avatarsdistribution.eps
 		cd ..
 		if [ $PROB -eq 0 ]
 		then PROB=70
