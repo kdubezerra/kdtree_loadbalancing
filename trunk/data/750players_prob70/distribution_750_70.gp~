@@ -1,6 +1,6 @@
 load "../distribution_generic.gp"
 
-set title '750 players, no hotspots' font "Helvetica, 20"
+set title '750 players, 3 hotspots, 70% chance of chosing one as waypoint' font "Helvetica, 20"
 set output "distribution_750_70.eps"
 
 plot newhistogram "Server 1", 'load_s1_750_70.data' using 2:xtic(1) t "Load" lc rgb '#333333', '' using 3 t "Overhead" lc rgb '#888888', \
