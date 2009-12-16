@@ -41,7 +41,6 @@ often occupy the virtual environment of the game in many different ways with var
 a great need for decentralized architectures with multiple servers that employ load balancing algorithms to manage regions of the virtual environment. In such systems, each player only connects to the server that manages the region where his avatar is located, whereas each 	server is responsible for mediating the interaction between all pairs of players connected to it. Devising the proper
 load balancing algorithm to take into account spatial and variable occupation is a challenging problem, which
 requires adaptive (and possibly dynamic) partitioning of the virtual environment. 
-%Some work has already been made in this direction, but with a geometric algorithm, more appropriate than those found in the literature, it should be possible to reduce the distribution granularity without compromising the rebalancing time, or even reducing it. 
 In this work, we propose the use of a kd-tree for partitioning the game environment into regions, and
 dynamically adjust the resulting subdivision based on the distribution of avatars in the virtual environment. We compared our algorithm to competing approaches found in the literature and show that our algorithm performed better in most aspects we analyzed.
 
@@ -359,9 +358,9 @@ The development of this work has been supported by the National Research Council
 \bibliographystyle{acmtrans}
 \bibliography{kdtree}
 \begin{received}
-Received February 1986;
-November 1993;
-accepted January 1996
+Received December 2009%;
+%November 1993;
+%accepted January 1996
 \end{received}
 
 %{\let\setcounter\mycounter
