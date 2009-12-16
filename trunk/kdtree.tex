@@ -38,7 +38,7 @@
 In Massively Multiplayer Online Games (MMOGs) there is a great demand for high bandwidth connections with irregular access patterns.
 Such irregular demand is due to the fact that participants in these games, which can vary from few hundreds to several tens of thousands, 
 often occupy the virtual environment of the game in many different ways with varying densities. Therefore, there is
-a great need for decentralized architectures with multiple servers that employ load balancing algorithms to manage regions of the virtual environment. In such systems, each player only connects to the server that manages the region where the player is located, whereas each  server is responsible for mediating the interaction between all pairs of players connected to it. Devising the proper
+a great need for decentralized architectures with multiple servers that employ load balancing algorithms to manage regions of the virtual environment. In such systems, each player only connects to the server that manages the region where his avatar is located, whereas each 	server is responsible for mediating the interaction between all pairs of players connected to it. Devising the proper
 load balancing algorithm to take into account spatial and variable occupation is a challenging problem, which
 requires adaptive (and possibly dynamic) partitioning of the virtual environment. 
 %Some work has already been made in this direction, but with a geometric algorithm, more appropriate than those found in the literature, it should be possible to reduce the distribution granularity without compromising the rebalancing time, or even reducing it. 
@@ -88,7 +88,7 @@ dynamically adjust the resulting subdivision based on the distribution of avatar
 Massively Multiplayer Online Games (MMOGs) is a genre of computer games that demands a lot of network
 bandwidth. The main characteristic of MMOGs is the large number of players interacting simultaneously, which currently can reach up to tens of thousands \cite{schiele2007rpp}. 
 Client-server architectures are often configured to allow communication among players, with the server intermediating the communication between each pair of players. 
-To allow player interaction, each player sends commands to the server, which calculates the new game state and propagates back to all players affected by the state change. This mechanism can lead to many state update messages sent by the server, which may be quadratic on the number of players when all players interact among themselves. Therefore, the cost of maintaining a centralized infrastructure like this is high when lots of players are used, thus restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
+To allow player interaction, each player sends commands to the server, which calculates the new game state and propagates back to all players affected by the state change. This mechanism can lead to many state update messages sent by the server, which may be quadratic on the number of players when all players interact among themselves. Therefore, the cost of maintaining a centralized infrastructure like this is high when lots of players are connected, thus restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
 
 In order to reduce this cost, several decentralized solutions have been proposed. Possible solutions include peer-to-peer networks \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps} or distributed servers
 \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam},
@@ -104,7 +104,7 @@ The text is organized as follows: in section \ref{context}, some related works a
 \section{Related Work}
 \label{context}
 
-Different authors have tried to address the problem of spatial partitioning the virtual environment in MMOGs for better distribution among multiple servers \cite{ahmed2008mol,bezerra2009lbs}. The simplest solution is to use a static division into cells of fixed size and position, with cells grouped into regions, and each region delegated to one of the servers (Figure \ref{fig:cells}). When one server becomes overloaded, it looks for another server to absorb one or more cells of its cells.
+Different authors have tried to address the problem of spatial partitioning the virtual environment in MMOGs for better distribution among multiple servers \cite{ahmed2008mol,bezerra2009lbs}. The simplest solution is to use a static division into cells of fixed size and position, with cells grouped into regions, and each region delegated to one of the servers (Figure \ref{fig:cells}). When one server becomes overloaded, it looks for another server to absorb one or more cells of its region.
 
 \begin{figure}[!t]
 	\centering
@@ -113,7 +113,7 @@ Different authors have tried to address the problem of spatial partitioning the 
 	\label{fig:cells}
 \end{figure}
 
-In the work of \cite{ahmed2008mol} a cell-oriented load balancing model is proposed. Their algorithm first enumerate all clusters of cells that are managed by the overloaded server. The smallest cluster is found, and selected the cell from this cluster that has the least interaction with other cells on the same server -- the interaction between two cells A and B is defined by the authors as the number of pairs of avatars interacting with each other, one from A and the other from B. The selected cell is transferred to the least loaded server, considering ``load'' as the bandwidth used to send state updates to the players whose avatars are positioned in the cells managed by that server. This process is repeated until the server is no longer overloaded or there is no more servers capable of absorbing more load -- in this case, one option could be to reduce the frequency at which state update messages are sent to the players, as suggested by \cite{bezerra2008a3}.
+In the work of \cite{ahmed2008mol} a cell-oriented load balancing model is proposed. Their algorithm first enumerates all clusters of cells that are managed by the overloaded server. The smallest cluster is found, and selected the cell from this cluster that has the least interaction with other cells on the same server -- the interaction between two cells A and B is defined by the authors as the number of pairs of avatars interacting with each other, one from A and the other from B. The selected cell is transferred to the least loaded server, considering ``load'' as the bandwidth used to send state updates to the players whose avatars are positioned in the cells managed by that server. This process is repeated until the server is no longer overloaded or there is no more servers capable of absorbing more load -- in this case, one option could be to reduce the frequency at which state update messages are sent to the players, as suggested by \cite{bezerra2008a3}.
 
 \begin{figure}[!t]
 	\centering
@@ -139,8 +139,7 @@ This kind of data structure is generally used in computer graphics. However, as 
 \section{Proposed approach}
 \label{sec:proposal}
 
-In this section we describe our load balancing algorithm. Our proposal is based on two criteria: first, the system should be considered heterogeneous (i.e. every server may have a different amount of resources) and, second, the load on each server might \emph{not} proportional to the number of players connected to it, but to the amount of bandwidth required to send state update messages to them.
-This choice is due to the fact that every player sends commands to the server at a constant rate, so the number of messages received by the server per unit time grows linearly with the number of players, whereas the number of state update messages sent by the server may be quadratic, in the worst case.
+In this section we describe our load balancing algorithm. Our proposal is based on two criteria: first, the system should be considered heterogeneous (i.e. every server may have a different amount of resources) and, second, the load on each server should be proportional to the amount of bandwidth required to send state update messages to the players connected to it and \emph{not} necessarily proportional to the number of players. This choice is due to the fact that every player sends commands to the server at a constant rate, so the number of messages received by the server per unit time grows linearly with the number of players, whereas the number of state update messages sent by the server may be quadratic, in the worst case.
 
 As mentioned in the introduction, to divide the environment of the game into regions, we propose the utilization of a data structure known as kd-tree. The vast majority of MMOGs, such as World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} and \mbox{Lineage II} \cite{lineage2}, despite having three-dimensional graphics, the simulated world -- cities, forests, swamps and points of interest in general -- in these games is mapped in two dimensions. Therefore, we propose to use a kd-tree with \mbox{k = 2}.
 
@@ -252,13 +251,27 @@ As the avatar lists received from the other servers are already sorted along bot
 \section{Simulations}
 \label{sec:simul}
 
-To evaluate the proposed dynamic load balancing algorithm, a virtual environment across which many avatars moved was simulated. Starting from a random point in the environment, each avatar moved according to the random waypoint model \cite{bettstetter2004spr}. To force a load imbalance and stress the algorithms tested, we defined some \emph{hotspots} -- points of interest to which the avatars moved with a higher probability than to other parts of the map. This way, a higher concentration of avatars was formed in some areas. Although the movement model used is not very realistic in terms of the way the players move their avatars in real games, it was only used to verify the load balance algorithms simulated. For each algorithm tested, we simulated two situations: one with the presence of hotspots and one without hotspots.
+To evaluate the proposed dynamic load balancing algorithm, a virtual environment across which many avatars moved was simulated. Starting from a random point in the environment, each avatar moved according to the random waypoint model \cite{bettstetter2004spr}. To force a load imbalance and stress the algorithms tested, we defined some \emph{hotspots} -- points of interest to which the avatars moved with a higher probability than to other parts of the map. This way, a higher concentration of avatars was formed in some areas. Although the movement model used is not very realistic in terms of the way the players move their avatars in real games, it was only used to verify the load balance algorithms simulated. For each algorithm tested, we simulated scenarios with 750 and 1500 players, with and without hotspots. In the cases with hotspots, we simulated different probabilities (70\% and 90\%) of each player selecting one of the hotspots as the next waypoint to move. Combining all these variables, we simulated six different scenarios for each algorithm -- Figure \ref{fig:scenarios} illustrates each situation.
 
-The proposed approach was compared to the ones presented in section \ref{context}, from other authors. However, it is important to observe that the model employed by \cite{ahmed2008mol} considers hexagonal cells, while in our simulations we used rectangular cells. Furthermore, the authors considered that there is a transmission rate threshold, which is the same for all servers in the system. As we assume a heterogenous system, their algorithm was simulated considering that each server has its own transmission rate threshold, depending on the upload bandwidth available in each one of them. However, we kept what we consider the core idea of the authors' approach, which is the selection of the smallest cell cluster managed by the overload server, then choosing that cell with the lowest interaction with other cells of the same server, and finally the transferring of this cell to the least loaded server. Besides Ahmed's algorithm, we also simulated some of the ones proposed in \cite{bezerra2009lbs} -- Progrega and BFBCT.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.49\linewidth]{data/750players_prob0/avatarsdistribution}
+  \includegraphics[width=0.49\linewidth]{data/1500players_prob0/avatarsdistribution}
+  \includegraphics[width=0.49\linewidth]{data/750players_prob70/avatarsdistribution}
+  \includegraphics[width=0.49\linewidth]{data/1500players_prob70/avatarsdistribution}
+  \includegraphics[width=0.49\linewidth]{data/750players_prob90/avatarsdistribution}
+  \includegraphics[width=0.49\linewidth]{data/1500players_prob90/avatarsdistribution}
+  \caption{Scenarios in which the algorithms were simulated}
+   \label{fig:scenarios}
+\end{figure}
 
-The simulated virtual environment consisted of a two-dimensional space, with 750 moving avatars, whose players were divided among eight servers ($S_1, S_2, ..., S_8$), each of which related to one of the regions determined by the balancing algorithm. For the cell-oriented approaches simulated, the space was divided into a \mbox{15 $\times$ 15} cell grid, or 225 cells. The capacity of each server $S_i$ was equal to $i \times 20000$, forming a heterogeneous system. This heterogeneity allowed us to evaluate the load balancing algorithms simulated according to the criterion of proportionality of the load distribution on the servers.
+The reason why we chose three kinds of avatar distribution -- no hotspots, mildly concentrated around hotpots (70\%) and densely concentrated (90\%) -- is because we wanted to make realistic simulations. In most commercial MMOGs, there are points of interest, like towns and dungeons. Usually, the players wander throughout the game world, looking for adventure and treasures, going to some dungeon and coming back to town once in a while -- therefore, creating a mildly concentrated avatar population around these places. Frequently, however, the game company creates special game events that attract most players to some locations in the game world, like a very powerful monster invading a town or a very rare and valuable treasure in a dungeon, creating a population density in these areas much higher than usual -- case to which the heavily concentrated simulation scenario refers. However, it is very uncommon to have absolutely no hotspots in a real MMOG, but this case was also simulated in order not only to cover this kind of no-hotspot situation, but also for its results to serve as a reference to the results of the scenarios with hotspots.
 
-In addition to evaluate the algorithms according to the proportionality of the load distribution, it was also considered the number of player migrations between servers. Each migration involves a player connecting to the new server and disconnecting from the old one. This kind of situation may occur in two cases: the avatar moved, changing the region in which it is located and, consequently, changing the server to which its player is connected; or the avatar was not moving and still its player had to migrate to a new server. In the latter case, obviously the player's transfer was due to a rebalancing. An ideal balancing algorithm performs the load redistribution requiring the minimum possible number of player transfers between servers, while keeping the load on each server proportional to its capacity.
+The proposed approach was compared to the ones presented in section \ref{context}, from other authors. However, it is important to observe that the model employed by \cite{ahmed2008mol} considers hexagonal cells, while in our simulations we used rectangular cells. Furthermore, the authors considered that there is a transmission rate threshold, which is the same for all servers in the system. As we assume a heterogenous system, their algorithm was simulated considering that each server has its own transmission rate threshold, depending on the upload bandwidth available for each one of them. However, we kept what we consider the core idea of the authors' approach, which is the selection of the smallest cell cluster managed by the overloaded server, then choosing from this cluster the cell with the lowest interaction with other cells of the same server, and finally the transferring of this cell to the least loaded server. Besides Ahmed's algorithm, we also simulated some of the ones proposed in \cite{bezerra2009lbs} -- Progrega and BFBCT.
+
+The simulated virtual environment consisted of a two-dimensional space, with 750 moving avatars, whose players were divided among eight servers ($S_1, S_2, ..., S_8$), each of which related to one of the regions determined by the balancing algorithm. For the cell-oriented approaches simulated, the space was divided into a \mbox{15 $\times$ 15} cell grid -- or 225 cells. The capacity of each server $S_i$ was equal to $i \times 20000$, forming a heterogeneous system. This heterogeneity allowed us to evaluate the load balancing algorithms simulated according to the criterion of proportionality of the load distribution on the servers.
+
+In addition to evaluate the algorithms according to the proportionality of the load distribution, it was also considered the number of player migrations between servers. Each migration involves a player connecting to the new server and disconnecting from the old one. This kind of situation may occur in two cases: the avatar moved, changing the region in which it is located and, consequently, changing the server to which its player is connected; or the avatar was not moving and still its player had to migrate to a new server. In the latter case, obviously the player's transfer was due to a rebalancing. An ideal balancing algorithm performs the load redistribution requiring the minimum possible number of player transfers between servers, while keeping the load on each server under (or proportional to) its capacity.
 
 Finally, the inter-server communication overhead will also be evaluated. It occurs when two players are interacting, but each one of them is connected to a different server. Although the algorithm proposed in this work does not address this problem directly, it would be interesting to evaluate how the load distribution performed by it influences the communication between the servers.
 
@@ -267,95 +280,64 @@ Finally, the inter-server communication overhead will also be evaluated. It occu
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.49\linewidth]{images/distribution_uniform}
-	\includegraphics[width=0.49\linewidth]{images/distribution_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/distribution_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/distribution_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/distribution_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/distribution_hotspots}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob0/distribution_750_0}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob0/distribution_1500_0}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob70/distribution_750_70}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob70/distribution_1500_70}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob90/distribution_750_90}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob90/distribution_1500_90}
 
-	\caption{Average load on each server (by algorithm, without hotspots)}
-	\label{fig:distribution:uniform}
+	\caption{Average load on each server in each scenario}
+	\label{fig:distribution}
 \end{figure}
 
-%\begin{figure}[!t]
-%	\centering
-%	\includegraphics[width=\linewidth]{images/distribution_hotspots}
-%	\caption{Average load on each server (by algorithm, with hotspots)}
-%	\label{fig:distribution:hotspots}
-%\end{figure}
+Figure \ref{fig:distribution} presents the average load (plus the inter-server communication overhead) on each server, for each algorithm tested. The first two graphics show the values in a situation without hotspots and, therefore, a smaller total load. The next two graphics, in turn, present the load distribution when the players tend to move towards one of the hotspots, increasing the number of interactions and, thus, the load on the servers. Finally, the two bottom graphics show the load on the servers when not only there are hotspots, but also the probability of a player moving to one of them is considerably high (90\%). Although this is not the worst case -- all players interacting with one another --, the load increase on the servers is significant.
 
-Figures \ref{fig:distribution:uniform} and \ref{fig:distribution:hotspots} present the average load (plus the inter-server communication overhead) on each server, for each algorithm tested. The first figure shows the values in a situation without hotspots and, therefore, a smaller total load. The second, in turn, presents the load distribution when the server system is overloaded. We can see, in Figure \ref{fig:distribution:uniform}, that all algorithms have met the objective of keeping the load on each server less than or equal to its capacity, when the system has sufficient resources to do so. In Figure \ref{fig:distribution:hotspots}, it is demonstrated that all the algorithms managed to dilute -- in a more or less proportional manner -- the load excess on the servers. It is important to observe, however, that the load shown in Figure \ref{fig:distribution:hotspots} is only theoretical. Each server will perform some kind of ``graceful degradation'' in order to keep the load under its capacity. For example, the update frequency might be reduced and access to the game could be denied for new players attempting to join, which is a common practice in most MMOGs.
+We can see that all algorithms have met the objective of keeping the load on each server lower than or proportional to its capacity, in all situations considered. When the server system is overloaded (as in every graphic of Figure \ref{fig:distribution}, but the first), it is demonstrated that all the algorithms managed to dilute -- in a more or less proportional manner -- the load excess on the servers. It is important to observe, however, that the load shown in the figure is only theoretical. Each server will perform some kind of ``graceful degradation'' in order to keep the load under its capacity. For example, the update frequency might be reduced and access to the game could be denied for new players attempting to join, which is a common practice in most MMOGs.
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.49\linewidth]{images/usagedeviation_uniform}
-		\includegraphics[width=0.49\linewidth]{images/usagedeviation_uniform}
-			\includegraphics[width=0.49\linewidth]{images/usagedeviation_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/usagedeviation_hotspots}
-			\includegraphics[width=0.49\linewidth]{images/usagedeviation_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/usagedeviation_hotspots}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob0/usagedeviation}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob0/usagedeviation}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob70/usagedeviation}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob70/usagedeviation}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob90/usagedeviation}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob90/usagedeviation}
 
-
-
-	\caption{Average deviation of the ideal balance of the servers (without hotspots)}
-	\label{fig:usagedeviation:uniform}
+	\caption{Average deviation of the ideal balance of the servers in each scenario}
+	\label{fig:usagedeviation}
 \end{figure}
 
-%\begin{figure}[!t]
-%	\centering
-
-%	\caption{Average deviation of the ideal balance of the servers (with hotspots)}
-%	\label{fig:usagedeviation:hotspots}
-%\end{figure}
-
-In figures \ref{fig:usagedeviation:uniform} and \ref{fig:usagedeviation:hotspots}, it is shown how much the balance generated by each algorithm deviates from an ideal balance -- that is, how much, on the average, the load on the servers deviate from a value exactly proportional to the capacity of each one of them -- over time. It is possible to observe that, in both situations -- with and without hotspots -- the algorithm that uses the kd-tree has the least deviation. This is the due to the fine granularity of its distribution, which, unlike the other approaches tested, is not limited by the size of a cell. In the situation with hotspots, the algorithm that uses the kd-tree is particularly effective, because rebalance is needed. In a situation where the system has more resources than necessary, the proportionality of the distribution is not as important: it is enough that each server manages a load smaller than its capacity.
+In figure \ref{fig:usagedeviation}, it is shown how much the balance generated by each algorithm deviates from an ideal balance -- that is, how much, on the average, the load on the servers deviate from a value exactly proportional to the capacity of each one of them -- over time. It is possible to observe that, at least in three of the situations of most overload, the algorithm that uses the kd-tree has the least deviation. This is the due to the fine granularity of its distribution, which, unlike the other approaches tested, is not limited by the size of a cell. In the situations of heavy overload, the algorithm that uses the kd-tree is particularly effective, because rebalance is needed. In a situation where the system has enough resources, the proportionality of the distribution is not an important issue: it is enough that each server manages a load smaller than its capacity.
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.49\linewidth]{images/migrations_uniform}
-	\includegraphics[width=0.49\linewidth]{images/migrations_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/migrations_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/migrations_uniform}
-	\includegraphics[width=0.49\linewidth]{images/migrations_hotspots}
-	\includegraphics[width=0.49\linewidth]{images/migrations_hotspots}
-
-
-
-	\caption{Player migrations between servers (without hotspots)}
-	\label{fig:migrations:uniform}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob0/migrations}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob0/migrations}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob70/migrations}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob70/migrations}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob90/migrations}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob90/migrations}
+	\caption{Player migrations between servers in each scenario}
+	\label{fig:migrations}
 \end{figure}
 
-%\begin{figure}[!t]
-%	\centering
-%	\includegraphics[width=0.8\linewidth]{images/migrations_hotspots}
-%	\caption{Player migrations between servers (with hotspots)}
-%	\label{fig:migrations:hotspots}
-%\end{figure}
-
-Regarding player migrations between servers, all the algorithms -- except BFBCT -- had a similar number of user migrations in the absence of hotspots (Figure \ref{fig:migrations:uniform}). This happens because the load of the game is less than the total capacity of the server system, which required less rebalancing and, thus, caused less migrations of players between servers. Figure \ref{fig:migrations:hotspots}, however, demonstrates that the algorithm that uses the kd-tree had a significantly lower number of user migrations than the other approaches. This is due, in the first place, to the fact that the regions defined by the leaf nodes of the kd-tree are necessarily contiguous, and each server was linked to only one leaf node. An avatar moving across the environment divided into very fragmented regions constantly crosses the borders between these regions and causes, therefore, its player to migrate from server to server repeatedly. Another reason for this result is that each rebalancing executed with the kd-tree gets much closer to an ideal distribution than the cell-based algorithms -- again, thanks to the finer granularity of the kd-tree based distribution --, requiring less future rebalancing and, thus, causing less player migrations.
+Regarding player migrations between servers, the proposed approach not only performed considerably better than the others (Figure \ref{fig:migrations}), as also it demonstrated a greater scalability, increasing its advantage over the other algorithms as the simulated scenario gets more heavily loaded. This is due, in the first place, to the fact that the regions defined by the leaf nodes of the kd-tree are necessarily contiguous, and each server was linked to only one leaf node. An avatar moving across an environment divided into very fragmented regions constantly crosses the borders between these regions and causes, therefore, its player to migrate from server to server repeatedly. Another reason for this result is that each rebalancing executed with the kd-tree gets much closer to an ideal distribution than the cell-based algorithms -- again, thanks to the finer granularity of the kd-tree based distribution --, requiring less future rebalancing and, thus, causing less player migrations.
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
-	\includegraphics[width=0.49\linewidth]{images/overhead_uniform}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob0/overhead}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob0/overhead}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob70/overhead}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob70/overhead}
+	\includegraphics[width=0.49\linewidth]{data/750players_prob90/overhead}
+	\includegraphics[width=0.49\linewidth]{data/1500players_prob90/overhead}
 
-	\caption{Inter-server communication for each algorithm over time (without hotspots)}
-	\label{fig:overhead:uniform}
+	\caption{Inter-server communication over time, for every algorithm in each scenario}
+	\label{fig:overhead}
 \end{figure}
 
-%\begin{figure}[!t]
-%	\centering
-%	\includegraphics[width=0.8\linewidth]{images/overhead_hotspots}
-%	\caption{Inter-server communication for each algorithm over time (with hotspots)}
-%	\label{fig:overhead:hotspots}
-%\end{figure}
-
-Finally, it is shown the amount of communication between servers for each simulated algorithm, over time. In Figure \ref{fig:overhead:uniform}, all algorithms have similar results, and the one which uses the kd-tree is slightly better than the others. This is also explained by the fact that the regions are contiguous, minimizing the number of boundaries between them and, consequently, reducing the probability of occurring interactions between pairs of avatars, each one in a different region. In Figure \ref{fig:overhead:hotspots}, it is possible to see that the inter-server communication caused by Progrega was considerably lower than all the others in a situation of system overload. The reason for this is that its main goal -- besides balancing the load -- is precisely to reduce the communication between servers. However, even not considering the additional cost, the algorithm that uses the kd-tree got second place in this criterion.
+Finally, it is shown the amount of communication between servers for each simulated algorithm, over time. As we can see in Figure \ref{fig:overhead}, when there are no hotspots, the algorithm which uses the kd-tree is slightly better than the others. This is also explained by the fact that the regions are contiguous, minimizing the number of boundaries between them and, consequently, reducing the probability of occurring interactions between pairs of avatars, each one in a different region. However, it is also possible to see that the inter-server communication with Progrega was considerably lower than with the other algorithms in all the situations of system overload, except when there were 750 players with 70\% chance of an avatar moving to a hotspot, where Progrega and the kd-tree based algorithm alternated in the first place. The reason for this is that the main goal of Progrega -- besides balancing the load -- is precisely to reduce the communication between servers. However, even not considering being built specifically for that, the algorithm proposed here got second place overall in this criterion.
 
 \section{Conclusions}
 \label{sec:conc}
@@ -363,6 +345,8 @@ Finally, it is shown the amount of communication between servers for each simula
 In this work, we proposed the use of a kd-tree to partition the virtual environment of MMOGs and perform the load balancing of servers by recursively adjusting the split coordinates stored in its nodes. One of the conclusions reached was that the use of kd-trees to make this partitioning allows a fine granularity of the load distribution, while the readjustment of the regions becomes simpler -- by recursively traversing the tree -- than the common approaches, based on cells and/or graph partitioning.
 
 The finer granularity allows for a better balancing, so that the load assigned to each server is close to the ideal value that should be assigned to it. This better balance also helped to reduce the number of migrations, by performing less rebalancing operations. The fact that the regions defined by the kd-tree are necessarily contiguous was one of the factors that contributed to the results of the proposed algorithm, which was better than the other algorithms simulated in most of the criteria considered.
+
+We have made an extensive set of simulations, comparing all the algorithms in six different scenarios, varying the number and distribution of avatars throughout the virtual environment of the game. By performing these tests, we have concluded that the proposed algorithm not only performs better than the others, but also that it scales better, at least in the kind of situations we considered, which we tried to make as close as possible to real MMOG scenarios.
 
 In conclusion, it was possible to use methods that can reduce the complexity of each rebalancing operation. This is due, first, to the reduction of the number of operations for calculating the relevance between pairs of avatars by sweeping a sorted avatar list and, secondly, to keeping at each server an avatar list already sorted in both dimensions, saving the time that would be spent on sorting the avatars when they were received by the server executing the rebalance.
 
