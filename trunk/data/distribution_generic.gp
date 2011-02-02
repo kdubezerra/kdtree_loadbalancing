@@ -11,7 +11,7 @@ set grid noxtics nomxtics ytics nomytics noztics nomztics \
 
 set boxwidth 0.7 absolute
 set style fill solid 1.0 border -1
-set style histogram rowstacked title offset 0, -6
+set style histogram rowstacked title offset 0, -1
 set style data histograms
 set key height 2 noautotitles #spacing 5 nobox outside below horizontal
 
